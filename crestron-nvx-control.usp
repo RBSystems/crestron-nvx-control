@@ -1,0 +1,109 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: Brigham Young University
+System Name: Sony Display IP Controller
+System Number: 1.2.22 
+Programmer: Dan Clegg
+Comments: Communicate with Sony Flat-panel (FWD or XBR) displays
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+  (Uncomment and declare compiler directives as needed)
+*******************************************************************************************/
+#SYMBOL_NAME "Crestron NVX Control"
+#CATEGORY "46" "Crestron NVX"
+#DEFINE_CONSTANT	BIGGESTSIZE	65534
+#DEFINE_CONSTANT	NEWLINE	"\n"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+#PRINT_TO_Trace
+#ENABLE_Trace
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+  (Uncomment and declare inputs and outputs as needed)
+*******************************************************************************************/
+DIGITAL_INPUT SwitchOutputs, SwitchVideo, SwitchAudio;
+ANALOG_INPUT Desired_Video_Input, Desired_Audio_Input;
+
+ANALOG_OUTPUT Video_Input_Source, Audio_Input_Source;
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+// INTEGER_PARAMETER
+// SIGNED_INTEGER_PARAMETER
+// LONG_INTEGER_PARAMETER
+// SIGNED_LONG_INTEGER_PARAMETER
+// STRING_PARAMETER
+
+
+/*******************************************************************************************
+  Global Variables
+  (Uncomment and declare global variables as needed)
+  Note:  Be sure to initialize all declared STRING variables as needed
+         For example, in Function Main: myString = "";
+*******************************************************************************************/
+INTEGER DesiredVideo, DesiredAudio;
+
+/*******************************************************************************************
+  Functions
+  (Add any additional functions here)
+  Note:  Functions must be physically placed before the location in
+         the code that calls them.
+*******************************************************************************************/
+
+/*******************************************************************************************
+  Event Handlers
+  (Uncomment and declare additional event handlers as needed)
+*******************************************************************************************/
+
+CHANGE Desired_Video_Input {
+	DesiredVideo = Desired_Video_Input;
+}
+
+CHANGE Desired_Audio_Input{
+	DesiredAudio = Desired_Audio_Input;
+}
+
+RELEASE SwitchOutputs {
+	Video_Input_Source = 0;
+	Audio_Input_Source = 0;
+	WAIT(20){
+		Video_Input_Source = DesiredVideo;
+		Audio_Input_Source = DesiredAudio;
+	}
+}
+
+RELEASE SwitchVideo {
+	Video_Input_Source = 0;
+	WAIT(20)
+		Video_Input_Source = DesiredVideo;
+}
+
+RELEASE SwitchAudio{	
+	Audio_Input_Source = 0;
+	WAIT(20)
+		Audio_Input_Source = DesiredAudio;
+}
+
+/*******************************************************************************************
+  Main()
+  Uncomment and place one-time startup code here
+  (This code will get called when the system starts up)
+*******************************************************************************************/
+Function Init()
+{
+	DesiredVideo = 0;
+	DesiredAudio = 0;}
+
+Function Main()
+{
+    WaitForInitializationComplete();
+	Init();
+}
