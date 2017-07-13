@@ -4,10 +4,12 @@
 *******************************************************************************************/
 /*
 Dealer Name: Brigham Young University
-System Name: Sony Display IP Controller
-System Number: 1.2.22 
+System Name: Crestron NVX Control
+System Number: 0.0.2
 Programmer: Dan Clegg
-Comments: Communicate with Sony Flat-panel (FWD or XBR) displays
+Comments: Communicate with DM-NVX-301-C transceivers. One instance of this module is only intended to
+control a single receiver/transmitter pair, though multiple instances may be added to the control program
+to cover all controlled transceivers.
 */
 
 /*******************************************************************************************
@@ -25,82 +27,73 @@ Comments: Communicate with Sony Flat-panel (FWD or XBR) displays
 
 /*******************************************************************************************
   DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
-  (Uncomment and declare inputs and outputs as needed)
 *******************************************************************************************/
-DIGITAL_INPUT SwitchOutputs, SwitchVideo, SwitchAudio;
-ANALOG_INPUT Desired_Video_Input, Desired_Audio_Input;
+DIGITAL_INPUT SwitchOutputs;
+ANALOG_INPUT Desired_Video_Input;
 
-ANALOG_OUTPUT Video_Input_Source, Audio_Input_Source;
+ANALOG_OUTPUT VideoOut;
 
 /*******************************************************************************************
   Parameters
-  (Uncomment and declare parameters as needed)
 *******************************************************************************************/
-// INTEGER_PARAMETER
-// SIGNED_INTEGER_PARAMETER
-// LONG_INTEGER_PARAMETER
-// SIGNED_LONG_INTEGER_PARAMETER
-// STRING_PARAMETER
-
 
 /*******************************************************************************************
   Global Variables
-  (Uncomment and declare global variables as needed)
-  Note:  Be sure to initialize all declared STRING variables as needed
-         For example, in Function Main: myString = "";
 *******************************************************************************************/
-INTEGER DesiredVideo, DesiredAudio;
+INTEGER DesiredVideo;//, DesiredAudio;
+//STRING Address1[1024],Address2[1024],Address3[1024],Blank[4];
 
 /*******************************************************************************************
   Functions
-  (Add any additional functions here)
-  Note:  Functions must be physically placed before the location in
-         the code that calls them.
 *******************************************************************************************/
 
 /*******************************************************************************************
   Event Handlers
-  (Uncomment and declare additional event handlers as needed)
 *******************************************************************************************/
 
 CHANGE Desired_Video_Input {
 	DesiredVideo = Desired_Video_Input;
 }
-
-CHANGE Desired_Audio_Input{
-	DesiredAudio = Desired_Audio_Input;
+/*
+CHANGE Stream1_Address {
+	Address1 = Stream1_Address;
 }
+
+CHANGE Stream2_Address {
+	Address2 = Stream2_Address;
+}
+
+CHANGE Stream3_Address {
+	Address3 = Stream3_Address;
+}
+*/
 
 RELEASE SwitchOutputs {
-	Video_Input_Source = 0;
-	Audio_Input_Source = 0;
-	WAIT(20){
-		Video_Input_Source = DesiredVideo;
-		Audio_Input_Source = DesiredAudio;
+	/*if(Desired_Video_Input = 1)
+	{
+		Video Out
+//		DesiredStreamAddress = Address1;
 	}
-}
-
-RELEASE SwitchVideo {
-	Video_Input_Source = 0;
-	WAIT(20)
-		Video_Input_Source = DesiredVideo;
-}
-
-RELEASE SwitchAudio{	
-	Audio_Input_Source = 0;
-	WAIT(20)
-		Audio_Input_Source = DesiredAudio;
+	else if (Desired_Video_Input = 2){
+//		DesiredStreamAddress = Address2;
+	}
+	else if (Desired_Video_Input = 3){
+//		DesiredStreamAddress = Address3;
+	}
+	else{
+//    	DesiredStreamAddress = Blank;
+	}*/
+	VideoOut = Desired_Video_Input;
 }
 
 /*******************************************************************************************
-  Main()
-  Uncomment and place one-time startup code here
-  (This code will get called when the system starts up)
+  Init() and Main()
 *******************************************************************************************/
 Function Init()
 {
 	DesiredVideo = 0;
-	DesiredAudio = 0;}
+//	Blank = "";
+}
 
 Function Main()
 {
